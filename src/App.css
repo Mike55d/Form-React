@@ -1,7 +1,20 @@
 .App {
-  text-align: center;
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  background-color: #1b1a17;
+  justify-content:center;
+  align-items: center;
+  height: 100vh;
 }
 
+.mt-4{
+  margin-top: 20px;
+}
+div.blue div.k-dialog {
+  background-color: transparent ;
+}
+/* 
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -35,4 +48,4 @@
   to {
     transform: rotate(360deg);
   }
-}
+} */
