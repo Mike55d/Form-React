@@ -1,4 +1,4 @@
-import React, { useState, useEffect ,useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as ReactDOM from 'react-dom';
 import { Form, Field, FormElement } from '@progress/kendo-react-form';
 import { Error } from '@progress/kendo-react-labels';
@@ -11,7 +11,7 @@ import { Dialog, DialogActionsBar } from '@progress/kendo-react-dialogs';
 import { Button } from '@progress/kendo-react-buttons';
 import { ListView, ListViewHeader, ListViewFooter } from '@progress/kendo-react-listview';
 import { connect } from 'react-redux';
-import { addCliente, editarCliente ,delCliente} from './actions/clientes';
+import { addCliente, editarCliente, delCliente } from './actions/clientes';
 
 const countries = [
   { text: 'Seleccione un pais', id: 0 },
@@ -20,25 +20,6 @@ const countries = [
   { text: 'Argentina', id: 3 },
   { text: 'Mexico', id: 4 }
 ];
-
-const fakeRegisters = [
-  {
-    'nombre': 'mike',
-    'apellido': 'gonzalez',
-    'email': 'mike.gonzalez55d@gmail.com',
-    'direccion': 'colinas de carrizal',
-    'ciudad': 'Miranda',
-    'pais': 'Venezuela',
-  },
-  {
-    'nombre': 'mike',
-    'apellido': 'gonzalez',
-    'email': 'mike.gonzalez55d@gmail.com',
-    'direccion': 'colinas de carrizal',
-    'ciudad': 'Miranda',
-    'pais': 'Venezuela',
-  }
-]
 
 const emailRegex = new RegExp(/\S+@\S+\.\S+/);
 const emailValidator = (value) => (emailRegex.test(value) ? "" : "Email Invalido");
@@ -85,12 +66,10 @@ const MyFooter = () => {
   );
 }
 
-
-
-function App({dispatch,clientes}) {
+function App({ dispatch, clientes }) {
 
   const [clienteForm, setClienteForm] = useState({
-    index:null,
+    index: null,
     nombre: '',
     apellido: '',
     email: '',
@@ -100,31 +79,30 @@ function App({dispatch,clientes}) {
   });
   const [showDialog, setShowDialog] = useState(false);
   const [showSucessDialog, setSucessShowDialog] = useState(false);
-  const [accion,setAccion] = useState('nuevo');
+  const [accion, setAccion] = useState('nuevo');
   const formRef = useRef(null);
-
 
   const sendForm = () => {
     let newState = clientes;
-    newState[clienteForm.index] = {...clienteForm};
+    newState[clienteForm.index] = { ...clienteForm };
     console.log('sending form');
     console.log(clienteForm);
     setShowDialog(true);
     setTimeout(() => {
       setShowDialog(false);
       setSucessShowDialog(true);
-      if(accion == 'nuevo'){
+      if (accion == 'nuevo') {
         dispatch(addCliente(clienteForm));
-      }else{
+      } else {
         dispatch(editarCliente(newState));
       }
-  }, 2500);
+    }, 2500);
   }
 
   const newCliente = () => {
     setAccion('nuevo')
     setClienteForm({
-      index:null,
+      index: null,
       nombre: '',
       apellido: '',
       email: '',
@@ -139,7 +117,7 @@ function App({dispatch,clientes}) {
     formRef.current.onChange('ciudad', { value: '' });
   }
 
-  const editCliente = (cliente,index) => {
+  const editCliente = (cliente, index) => {
     setAccion('editar')
     let clienteIndex = cliente;
     clienteIndex.index = index;
@@ -155,27 +133,22 @@ function App({dispatch,clientes}) {
   const deleteCliente = (index) => {
     console.log('delete');
     let newState = clientes;
-    newState.splice(index,1);
+    newState.splice(index, 1);
     console.log(newState);
     dispatch(delCliente(newState));
   }
 
-  useEffect(()=> {
-    console.log(clientes)
-  },[clientes]);
-
-
   const MyItemRender = props => {
     let item = props.dataItem;
     return (
-      <div style={{ display: 'flex' , padding:10, alignContent:'center' , alignItems:'center' }}>
+      <div style={{ display: 'flex', padding: 10, alignContent: 'center', alignItems: 'center' }}>
         <div style={{ flex: 2 }}>
           <h2 style={{ fontSize: 14, color: '#454545', marginBottom: 0 }} className="text-uppercase">{item.nombre}</h2>
           <div style={{ fontSize: 12, color: "#a0a0a0" }}>{item.email}</div>
         </div>
         <div style={{ flex: 1 }}>
-          <Button onClick={() => editCliente(item,props.index)} style={{marginRight:20}} primary={true} >Edit</Button>
-          <Button onClick={()=> deleteCliente(props.index)} >Delete</Button>
+          <Button onClick={() => editCliente(item, props.index)} style={{ marginRight: 20 }} primary={true} >Edit</Button>
+          <Button onClick={() => deleteCliente(props.index)} >Delete</Button>
         </div>
       </div>
     );
@@ -249,11 +222,11 @@ function App({dispatch,clientes}) {
                 className="k-button"
                 disabled={!formRenderProps.allowSubmit || !clienteForm.pais}
               >
-                {accion == 'nuevo'? 'Guardar': 'Editar'}
-            </button>
-            <button
+                {accion == 'nuevo' ? 'Guardar' : 'Editar'}
+              </button>
+              <button
                 onClick={() => newCliente()}
-                style={{marginLeft:10}}
+                style={{ marginLeft: 10 }}
                 className="k-button"
               >
                 Nuevo
@@ -262,19 +235,19 @@ function App({dispatch,clientes}) {
           </FormElement>
         )}
       />
-        <ListView
-          data={clientes}
-          item={MyItemRender}
-          style={{flex:.25 , marginLeft:40 , padding:20 , borderRadius:10}}
-          header={MyHeader}
-          footer={MyFooter}
-        />
+      <ListView
+        data={clientes}
+        item={MyItemRender}
+        style={{ flex: .25, marginLeft: 40, padding: 20, borderRadius: 10 }}
+        header={MyHeader}
+        footer={MyFooter}
+      />
     </div>
   );
 }
 
-const mapStateToProps = (state) =>({
-  clientes:state.clientes
+const mapStateToProps = (state) => ({
+  clientes: state.clientes
 })
 
 export default connect(mapStateToProps)(App);
